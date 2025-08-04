@@ -25,9 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} transform transition-transform duration-300 ease-in-out`}>
-        <SessionWrapper>
-          {children}
-        </SessionWrapper>
+            <SessionWrapper>
+                {children}
+            </SessionWrapper>
       </body>
     </html>
   );

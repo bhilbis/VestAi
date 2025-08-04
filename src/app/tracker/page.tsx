@@ -1,16 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useEffect, useState } from "react"
 import { TrackerForm } from "@/components/tracker/Form"
 import { TrackerTable } from "@/components/tracker/Table"
 import { AIResponse } from "@/components/tracker/AIResponse"
-import ModernPageLayout from "@/components/tracker/pageLayout"
 import { StatsCards } from "@/components/tracker/Stats"
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react"
 
 export default function TrackerPage() {
   const [assets, setAssets] = useState<any[]>([])
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   useEffect(() => {
     fetch("/api/assets")
@@ -39,8 +39,15 @@ export default function TrackerPage() {
       console.error("Terjadi kesalahan saat menghapus aset:", error);
       alert("Terjadi kesalahan saat menghapus aset.");
     }
-};
+  };
 
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg">Memuat sesi pengguna...</p>
+      </div>
+    )
+  }
 
   if (!session) {
     return (
@@ -52,7 +59,7 @@ export default function TrackerPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full">
       <StatsCards 
         totalValue={assets.reduce((sum, asset) => sum + (asset.value || 0), 0)}
         totalProfit={assets.reduce((sum, asset) => sum + (asset.profit || 0), 0)}

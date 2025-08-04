@@ -1,4 +1,4 @@
-import { Activity, ArrowDownRight, ArrowUpRight, Wallet } from "lucide-react";
+import { Activity, ArrowDownRight, ArrowUpRight, BarChart3, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 
 export const StatsCards = ({ totalValue, totalProfit, profitPercentage }: { totalValue: number, totalProfit: number, profitPercentage: number }) => {
@@ -36,8 +36,8 @@ export const StatsCards = ({ totalValue, totalProfit, profitPercentage }: { tota
             </div>
             <div className="p-3 bg-white/20 rounded-full">
               {totalProfit >= 0 ? 
-                <ArrowUpRight className="w-6 h-6 text-white" /> : 
-                <ArrowDownRight className="w-6 h-6 text-white" />
+                <TrendingUp className="w-6 h-6 text-green-500" /> : 
+                <TrendingDown className="w-6 h-6 text-red-500" />
               }
             </div>
           </div>
@@ -52,7 +52,7 @@ export const StatsCards = ({ totalValue, totalProfit, profitPercentage }: { tota
               <p className="text-2xl font-bold">{profitPercentage.toFixed(2)}%</p>
             </div>
             <div className="p-3 bg-white/20 rounded-full">
-              <Activity className="w-6 h-6 text-white" />
+              <BarChart3 className="w-6 h-6 text-white" />
             </div>
           </div>
         </CardContent>
