@@ -6,11 +6,9 @@ import { TrackerForm } from "@/components/tracker/Form"
 import { TrackerTable } from "@/components/tracker/Table"
 import { AIResponse } from "@/components/tracker/AIResponse"
 import { StatsCards } from "@/components/tracker/Stats"
-import { useSession, signIn } from "next-auth/react"
 
 export default function TrackerPage() {
   const [assets, setAssets] = useState<any[]>([])
-  const { data: session, status } = useSession()
 
   useEffect(() => {
     fetch("/api/assets")
@@ -40,23 +38,6 @@ export default function TrackerPage() {
       alert("Terjadi kesalahan saat menghapus aset.");
     }
   };
-
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Memuat sesi pengguna...</p>
-      </div>
-    )
-  }
-
-  if (!session) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-xl">Silakan login untuk mengakses tracker</p>
-        <button onClick={() => signIn("google")} className="px-4 py-2 bg-black text-white rounded">Login dengan Google</button>
-      </div>
-    )
-  }
 
   return (
     <div className="space-y-8 w-full">

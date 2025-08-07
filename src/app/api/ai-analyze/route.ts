@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { OpenAI } from "openai";
+import { AI_MODELS } from "../data";
 
 const openai = new OpenAI({
     baseURL: "https://openrouter.ai/api/v1",
@@ -10,39 +11,48 @@ const openai = new OpenAI({
 
 export async function POST(req: NextRequest) {
    try { 
-    const { assets, marketPrices } = await req.json()
+    const { assets, marketPrices, message, model = 'deepseek/deepseek-v3-base' } = await req.json()
 
     if (!assets || assets.length === 0) {
-    return NextResponse.json({ message: "Data aset kosong." }, { status: 400 })
-  }
+      return NextResponse.json({ message: "No asset data provided." }, { status: 400 })
+    }
 
-    let formattedAssets = "Data aset tidak tersedia."
+    const modelConfig = AI_MODELS[model as keyof typeof AI_MODELS] || AI_MODELS['deepseek/deepseek-v3-base'];
+
+    let formattedAssets = "No asset data available."
     if (Array.isArray(assets)) {
         formattedAssets = assets.map((a: any) => {
-          const market =  marketPrices?.[a.id]
-          return `- ${a.name}, Jumlah: ${a.amount}, Harga Beli: ${a.buyPrice}${market ? `, Harga Pasar Saat Ini: ${market}` : ''}`
+          const market = marketPrices?.[a.id]
+          return `- ${a.name}, Amount: ${a.amount}, Purchase Price: ${a.buyPrice}${market ? `, Current Market Price: ${market}` : ''}`
         }).join("\n")
     }
 
-    const prompt = `
-        Kamu adalah asisten/penasihat tentang keuangan. Berdasarkan data aset berikut:
-        ${formattedAssets}
-        Berikan analisis, potensi keuntungan/rugi, dan saran investasi berdasarkan data aset di atas.
-        jelaskan dalam bahasa indonesia dan untuk seluruh aset adalah dalam nilai rupiah.
-        **Jangan gunakan notasi matematis atau LaTeX**, seperti \\text{}, \\boxed{}, simbol $ $, kurung siku [ ], atau simbol matematika lainnya.
-        Tulis rumus atau perhitungan dengan cara biasa. Contoh: "Keuntungan = (Harga Jual - Harga Beli) x Jumlah Unit"
-        Gunakan format angka standar Indonesia, misalnya: Rp 8.687,33
+    const userQuery = message || "Analyze my portfolio and provide insights."
 
-        Berikan hasil dalam format markdown, mudah dibaca oleh pengguna umum (non-teknis).
+    const prompt = `
+        Based on the following asset data:
+        ${formattedAssets}
+        
+        User query: ${userQuery}
+        
+        Please provide:
+        1. A detailed analysis of the portfolio
+        2. Potential gains/losses
+        3. Investment recommendations based on current market conditions
+        4. Risk assessment
+        
+        Format your response in a clear, structured way with sections for Analysis, Insights, and Recommendations.
+        Use plain language that is accessible to non-technical users.
+        If you identify specific actions (buy/sell), please be explicit about the asset, amount, and your confidence level.
     `
 
     const completion = await openai.chat.completions.create({
-    model: "deepseek/deepseek-r1-0528:free",
-    stream: true,
-    messages: [
-            { role: "system", content: "Kamu adalah seorang analisis/penasihat keuangan cerdas" },
-            { role: "user", content: prompt }
-        ],
+      model: modelConfig.model,
+      stream: true,
+      messages: [
+        { role: "system", content: modelConfig.systemPrompt },
+        { role: "user", content: prompt }
+      ],
     });
 
     let fullText = ""
@@ -62,16 +72,22 @@ export async function POST(req: NextRequest) {
 
     const cleaned = fullText.replace(/<think>[\s\S]*?<\/think>/g, "")
 
-    await prisma.analysis.create({
-      data: {
-        userId: "",
-        content: cleaned,
-        assets: JSON.stringify(assets),
-      }
-    })
+    // Save the analysis to the database
+    try {
+      await prisma.analysis.create({
+        data: {
+          userId: "",
+          content: cleaned,
+          assets: JSON.stringify(assets),
+        }
+      })
+    } catch (dbError) {
+      console.error("Database error:", dbError)
+      // Continue even if database save fails
+    }
+
     return new Response(stream, {
       headers: {
-        // "Content-Type": "text/plain; charset=utf-8",
         "Content-Type": "text/event-stream",
       }
     })

@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Wallet2Icon, ChevronUp, Home, MessagesSquare, Settings, SquaresExclude, User2 } from "lucide-react"
+import { Wallet2Icon, ChevronUp, Settings, SquaresExclude, User2, LayoutDashboardIcon, MessageSquareIcon } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { signOut, useSession } from "next-auth/react";
 import { useThemeStore } from "@/lib/themeToggle";
@@ -23,12 +23,12 @@ const items = [
   {
     title: "Home",
     url: "/tracker",
-    icon: Home,
+    icon: LayoutDashboardIcon,
   },
   {
     title: "Messages",
     url: "/tracker/messages",
-    icon: MessagesSquare,
+    icon: MessageSquareIcon,
   },
   {
     title: "Assets",
