@@ -17,7 +17,7 @@ export async function GET() {
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
   const body = await req.json()
-  const { name, amount, buyPrice } = body
+  const { name, amount, buyPrice, type, category, color, coinId } = body
 
   if (!session?.user?.email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -26,6 +26,10 @@ export async function POST(req: Request) {
       name,
       amount: parseFloat(amount),
       buyPrice: parseFloat(buyPrice),
+      type: type || 'stock',
+      category: category || type || 'stock',
+      color: color || 'bg-gray-500',
+      coinId: coinId || null,
       userId: session.user.id,
     },
   })

@@ -1,3 +1,5 @@
+import { LayoutDashboardIcon, MessageSquareIcon, Settings, Wallet2Icon } from "lucide-react";
+
 // Available AI models and their configurations
 export const AI_MODELS = {
   'deepseek/deepseek-v3': {
@@ -22,3 +24,30 @@ export const AI_MODELS = {
     streamable: false
   },
 };
+
+export const NavbarItems = [
+  { 
+    title: "Home", 
+    url: "/tracker", 
+    icon: LayoutDashboardIcon, 
+  }, 
+  { 
+    title: "Messages",
+    icon: MessageSquareIcon, 
+  }, 
+  { 
+    title: "Assets",
+    icon: Wallet2Icon,
+    hasDropdown: true,
+  }, 
+  { 
+    title: "Settings", 
+    url: "/tracker/settings", 
+    icon: Settings, 
+  }, 
+];
+
+export const assetTypes = [
+  { id: 'stock', label: 'Saham', color: 'bg-blue-500' },
+  { id: 'crypto', label: 'Crypto', color: 'bg-orange-500' },
+];

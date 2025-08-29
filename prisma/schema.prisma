@@ -48,8 +48,13 @@ model Asset {
   id        String   @id @default(cuid())
   name      String
   coinId    String?
-  amount    Float
-  buyPrice  Float
+  type         String       // 'stock', 'crypto', 'cash', 'commodity'
+  category     String?      // optional kategori lebih detail
+  color        String?
+  amount    Float?
+  buyPrice  Float?
+  positionX Float?
+  positionY Float?
   createdAt DateTime @default(now())
   userId    String
   user      User     @relation(fields: [userId], references: [id])

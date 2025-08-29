@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Asset" ADD COLUMN     "positionX" DOUBLE PRECISION,
+ADD COLUMN     "positionY" DOUBLE PRECISION;

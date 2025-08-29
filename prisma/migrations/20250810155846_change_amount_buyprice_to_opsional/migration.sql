@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Asset" ALTER COLUMN "amount" DROP NOT NULL,
+ALTER COLUMN "buyPrice" DROP NOT NULL;
