@@ -228,7 +228,6 @@ export function Navbar({ position, onPositionChange, onOpenMessages, userData, a
                 <button
                   onClick={() => onPositionChange(pos as any)}
                   aria-label={`Move navbar to ${pos}`}
-                  title={`Move navbar to ${pos}`}
                   className={`
                     w-6 h-6 rounded border transition-all
                     ${position === pos 

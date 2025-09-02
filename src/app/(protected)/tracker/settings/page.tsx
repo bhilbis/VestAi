@@ -64,7 +64,7 @@ export default function Page() {
         <div className="space-y-2 text-sm text-muted-foreground">
           <p>AI Portfolio Tracker v1.0</p>
           <p>Aplikasi tracking portfolio dengan teknologi AI untuk memberikan insight dan analisis investasi yang mendalam.</p>
-          <p>Fitur: Dashboard analytics, AI chat assistant, drag & drop interface, real-time notifications.</p>
+          <p>Fitur: Dashboard analytics, AI chat assistant, drag & drop interface.</p>
         </div>
       </Card>
     </div>
